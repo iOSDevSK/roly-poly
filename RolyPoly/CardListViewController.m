@@ -287,7 +287,8 @@
     CGFloat angle = [self angleForHorizontalOffset:horizontalOffset];
     CGFloat alpha = [self alphaForHorizontalOffset:horizontalOffset];
     
-    card.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(angle), CGAffineTransformMakeTranslation(horizontalOffset, 0));
+    card.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(angle),
+                                             CGAffineTransformMakeTranslation(horizontalOffset, 0));
     card.alpha = alpha;
     
     if (recognizer.state == UIGestureRecognizerStateEnded) {
