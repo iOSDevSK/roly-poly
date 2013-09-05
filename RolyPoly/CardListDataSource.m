@@ -29,6 +29,8 @@
     UIView *card = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
     card.backgroundColor = [self randomColor];
     card.layer.cornerRadius = 3;
+    card.layer.rasterizationScale = [UIScreen mainScreen].scale;
+    card.layer.shouldRasterize = YES;
     return card;
 }
 

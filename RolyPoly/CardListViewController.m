@@ -150,6 +150,7 @@
     return _cardHeights;
 }
 
+
 - (NSMutableDictionary *)visibleCards
 {
     if (!_visibleCards) {
@@ -189,10 +190,11 @@
     
     while ([self shouldIncrementIndexOfLastVisibleCard]) {
         self.indexOfLastVisibleCard += 1;
+        int index = self.indexOfLastVisibleCard;
         
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC));
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-            [self loadCardAtIndex:self.indexOfLastVisibleCard animated:YES];
+            [self loadCardAtIndex:index animated:YES];
         });
         
         delay += 0.3;
@@ -202,7 +204,7 @@
 
 - (void)loadCardAtIndex:(int)index animated:(BOOL)animated
 {
-    NSLog(@"loading card at index\t%d", index);
+    NSLog(@"loading card at index\t\t%d", index);
 
     UIView *card = [self.dataSource cardList:self cardForItemAtIndex:index];
     CGFloat width = self.cardWidth;
