@@ -1,0 +1,328 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5B2CF16917D3FE0100A095F3 /* CardListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2CF16817D3FE0100A095F3 /* CardListViewController.m */; };
+		5B2CF16C17D54F4200A095F3 /* CardListDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2CF16B17D54F4200A095F3 /* CardListDataSource.m */; };
+		5B2CF16E17D5BF1F00A095F3 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B2CF16D17D5BF1F00A095F3 /* QuartzCore.framework */; };
+		5BEED16D17D15A930044BC83 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BEED16C17D15A930044BC83 /* UIKit.framework */; };
+		5BEED16F17D15A930044BC83 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BEED16E17D15A930044BC83 /* Foundation.framework */; };
+		5BEED17117D15A930044BC83 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BEED17017D15A930044BC83 /* CoreGraphics.framework */; };
+		5BEED17717D15A930044BC83 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5BEED17517D15A930044BC83 /* InfoPlist.strings */; };
+		5BEED17917D15A930044BC83 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BEED17817D15A930044BC83 /* main.m */; };
+		5BEED17D17D15A930044BC83 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BEED17C17D15A930044BC83 /* AppDelegate.m */; };
+		5BEED17F17D15A930044BC83 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BEED17E17D15A930044BC83 /* Default.png */; };
+		5BEED18117D15A930044BC83 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BEED18017D15A930044BC83 /* Default@2x.png */; };
+		5BEED18317D15A930044BC83 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BEED18217D15A930044BC83 /* Default-568h@2x.png */; };
+		8C38066117D6A1CB007E330B /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C38066017D6A1CB007E330B /* CFNetwork.framework */; };
+		8C38066317D6A270007E330B /* Reveal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C38066217D6A270007E330B /* Reveal.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		5B2CF16717D3FE0100A095F3 /* CardListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardListViewController.h; sourceTree = "<group>"; };
+		5B2CF16817D3FE0100A095F3 /* CardListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CardListViewController.m; sourceTree = "<group>"; };
+		5B2CF16A17D54F4200A095F3 /* CardListDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardListDataSource.h; sourceTree = "<group>"; };
+		5B2CF16B17D54F4200A095F3 /* CardListDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CardListDataSource.m; sourceTree = "<group>"; };
+		5B2CF16D17D5BF1F00A095F3 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		5BEED16917D15A930044BC83 /* RolyPoly.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RolyPoly.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5BEED16C17D15A930044BC83 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		5BEED16E17D15A930044BC83 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		5BEED17017D15A930044BC83 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		5BEED17417D15A930044BC83 /* RolyPoly-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "RolyPoly-Info.plist"; sourceTree = "<group>"; };
+		5BEED17617D15A930044BC83 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		5BEED17817D15A930044BC83 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		5BEED17A17D15A930044BC83 /* RolyPoly-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RolyPoly-Prefix.pch"; sourceTree = "<group>"; };
+		5BEED17B17D15A930044BC83 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		5BEED17C17D15A930044BC83 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		5BEED17E17D15A930044BC83 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		5BEED18017D15A930044BC83 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		5BEED18217D15A930044BC83 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		8C38066017D6A1CB007E330B /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		8C38066217D6A270007E330B /* Reveal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Reveal.framework; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5BEED16617D15A930044BC83 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5BEED16D17D15A930044BC83 /* UIKit.framework in Frameworks */,
+				5BEED16F17D15A930044BC83 /* Foundation.framework in Frameworks */,
+				5BEED17117D15A930044BC83 /* CoreGraphics.framework in Frameworks */,
+				5B2CF16E17D5BF1F00A095F3 /* QuartzCore.framework in Frameworks */,
+				8C38066117D6A1CB007E330B /* CFNetwork.framework in Frameworks */,
+				8C38066317D6A270007E330B /* Reveal.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5BEED16017D15A930044BC83 = {
+			isa = PBXGroup;
+			children = (
+				5BEED17217D15A930044BC83 /* RolyPoly */,
+				5BEED16B17D15A930044BC83 /* Frameworks */,
+				5BEED16A17D15A930044BC83 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5BEED16A17D15A930044BC83 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5BEED16917D15A930044BC83 /* RolyPoly.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5BEED16B17D15A930044BC83 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				8C38066217D6A270007E330B /* Reveal.framework */,
+				8C38066017D6A1CB007E330B /* CFNetwork.framework */,
+				5B2CF16D17D5BF1F00A095F3 /* QuartzCore.framework */,
+				5BEED16C17D15A930044BC83 /* UIKit.framework */,
+				5BEED16E17D15A930044BC83 /* Foundation.framework */,
+				5BEED17017D15A930044BC83 /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		5BEED17217D15A930044BC83 /* RolyPoly */ = {
+			isa = PBXGroup;
+			children = (
+				5BEED17B17D15A930044BC83 /* AppDelegate.h */,
+				5BEED17C17D15A930044BC83 /* AppDelegate.m */,
+				5B2CF16717D3FE0100A095F3 /* CardListViewController.h */,
+				5B2CF16817D3FE0100A095F3 /* CardListViewController.m */,
+				5B2CF16A17D54F4200A095F3 /* CardListDataSource.h */,
+				5B2CF16B17D54F4200A095F3 /* CardListDataSource.m */,
+				5BEED17317D15A930044BC83 /* Supporting Files */,
+			);
+			path = RolyPoly;
+			sourceTree = "<group>";
+		};
+		5BEED17317D15A930044BC83 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				5BEED17417D15A930044BC83 /* RolyPoly-Info.plist */,
+				5BEED17517D15A930044BC83 /* InfoPlist.strings */,
+				5BEED17817D15A930044BC83 /* main.m */,
+				5BEED17A17D15A930044BC83 /* RolyPoly-Prefix.pch */,
+				5BEED17E17D15A930044BC83 /* Default.png */,
+				5BEED18017D15A930044BC83 /* Default@2x.png */,
+				5BEED18217D15A930044BC83 /* Default-568h@2x.png */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		5BEED16817D15A930044BC83 /* RolyPoly */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5BEED18617D15A930044BC83 /* Build configuration list for PBXNativeTarget "RolyPoly" */;
+			buildPhases = (
+				5BEED16517D15A930044BC83 /* Sources */,
+				5BEED16617D15A930044BC83 /* Frameworks */,
+				5BEED16717D15A930044BC83 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = RolyPoly;
+			productName = RolyPoly;
+			productReference = 5BEED16917D15A930044BC83 /* RolyPoly.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5BEED16117D15A930044BC83 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0460;
+				ORGANIZATIONNAME = "Martin Ortega";
+			};
+			buildConfigurationList = 5BEED16417D15A930044BC83 /* Build configuration list for PBXProject "RolyPoly" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 5BEED16017D15A930044BC83;
+			productRefGroup = 5BEED16A17D15A930044BC83 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5BEED16817D15A930044BC83 /* RolyPoly */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		5BEED16717D15A930044BC83 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5BEED17717D15A930044BC83 /* InfoPlist.strings in Resources */,
+				5BEED17F17D15A930044BC83 /* Default.png in Resources */,
+				5BEED18117D15A930044BC83 /* Default@2x.png in Resources */,
+				5BEED18317D15A930044BC83 /* Default-568h@2x.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5BEED16517D15A930044BC83 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5BEED17917D15A930044BC83 /* main.m in Sources */,
+				5BEED17D17D15A930044BC83 /* AppDelegate.m in Sources */,
+				5B2CF16917D3FE0100A095F3 /* CardListViewController.m in Sources */,
+				5B2CF16C17D54F4200A095F3 /* CardListDataSource.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		5BEED17517D15A930044BC83 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5BEED17617D15A930044BC83 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		5BEED18417D15A930044BC83 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Rakuten, Inc.";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Rakuten, Inc.";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				ONLY_ACTIVE_ARCH = YES;
+				PROVISIONING_PROFILE = "663FD189-D897-4CB6-8810-94CA4FD41A15";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "663FD189-D897-4CB6-8810-94CA4FD41A15";
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		5BEED18517D15A930044BC83 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Rakuten, Inc.";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Rakuten, Inc.";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				PROVISIONING_PROFILE = "663FD189-D897-4CB6-8810-94CA4FD41A15";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "663FD189-D897-4CB6-8810-94CA4FD41A15";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		5BEED18717D15A930044BC83 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "RolyPoly/RolyPoly-Prefix.pch";
+				INFOPLIST_FILE = "RolyPoly/RolyPoly-Info.plist";
+				"OTHER_LDFLAGS[arch=*]" = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		5BEED18817D15A930044BC83 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "RolyPoly/RolyPoly-Prefix.pch";
+				INFOPLIST_FILE = "RolyPoly/RolyPoly-Info.plist";
+				"OTHER_LDFLAGS[arch=*]" = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5BEED16417D15A930044BC83 /* Build configuration list for PBXProject "RolyPoly" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5BEED18417D15A930044BC83 /* Debug */,
+				5BEED18517D15A930044BC83 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5BEED18617D15A930044BC83 /* Build configuration list for PBXNativeTarget "RolyPoly" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5BEED18717D15A930044BC83 /* Debug */,
+				5BEED18817D15A930044BC83 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5BEED16117D15A930044BC83 /* Project object */;
+}
