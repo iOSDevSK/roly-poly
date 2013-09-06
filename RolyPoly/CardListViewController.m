@@ -8,6 +8,11 @@
 
 #import "CardListViewController.h"
 
+typedef enum {
+    Left,
+    Right
+} Direction;
+
 ////////////////////////////////////////////////////////////////////////////
 
 @interface CardListViewController () <UIScrollViewDelegate, UIGestureRecognizerDelegate>
@@ -15,8 +20,8 @@
 @property (nonatomic, readonly) CGFloat padding;
 @property (nonatomic, readonly) CGFloat cardWidth;
 @property (nonatomic, readonly) CGFloat defaultCardHeight;
-@property (nonatomic, strong) NSArray *cardPositions;
-@property (nonatomic, strong) NSArray *cardHeights;
+@property (nonatomic, strong) NSMutableArray *cardPositions;
+@property (nonatomic, strong) NSMutableArray *cardHeights;
 @property (nonatomic, strong) NSMutableDictionary *visibleCards;
 
 @property (nonatomic, readonly) CGFloat slideDuration;
@@ -113,7 +118,7 @@
 - (NSArray *)cardPositions
 {
     if (!_cardPositions) {
-        _cardPositions = [NSArray array];
+        _cardPositions = [NSMutableArray array];
         int numberOfCards = [self.dataSource numberOfCardsForCardList:self];
         for (int i = 0; i < numberOfCards; i++) {
             CGFloat position = self.padding;
@@ -125,7 +130,7 @@
                 position += positionOfPreviousCard.floatValue + heightOfPreviousCard.floatValue;
             }
             
-            _cardPositions = [_cardPositions arrayByAddingObject:[NSNumber numberWithFloat:position]];
+            [_cardPositions addObject:[NSNumber numberWithFloat:position]];
         }
     }
     
@@ -136,14 +141,14 @@
 - (NSArray *)cardHeights
 {
     if (!_cardHeights) {
-        _cardHeights = [NSArray array];
+        _cardHeights = [NSMutableArray array];
         int numberOfCards = [self.dataSource numberOfCardsForCardList:self];
         for (int i = 0; i < numberOfCards; i++) {
             CGFloat height = self.defaultCardHeight;
             if ([self.dataSource respondsToSelector:@selector(cardList:heightForCardAtIndex:)]) {
                 height = [self.dataSource cardList:self heightForCardAtIndex:i];
             }
-            _cardHeights = [_cardHeights arrayByAddingObject:[NSNumber numberWithFloat:height]];
+            [_cardHeights addObject:[NSNumber numberWithFloat:height]];
         }
     }
     
@@ -170,12 +175,6 @@
 - (CGFloat)slideDelay
 {
     return 0.2;
-}
-
-
-- (CGFloat)deletionSwipeThreshold
-{
-    return 0.75 * self.cardWidth;
 }
 
 //--------------------------------------------------------------------------
@@ -285,6 +284,7 @@
     UIView *card = recognizer.view;
 
     CGFloat horizontalOffset = [recognizer translationInView:self.view].x;
+    Direction direction = horizontalOffset < 0 ? Left : Right;
         
     CGFloat angle = [self angleForHorizontalOffset:horizontalOffset];
     CGFloat alpha = [self alphaForHorizontalOffset:horizontalOffset];
@@ -295,7 +295,9 @@
     
     if (recognizer.state == UIGestureRecognizerStateEnded) {
         if (fabs(horizontalOffset) > deleteThreshold) {
-            [self deleteCard:card];
+            [self slideCardOffScreen:card inDirection:direction completion:^(BOOL finished) {
+                [self deleteCard:card];
+            }];
         } else {
             [self returnCardToOriginalState:card];
         }
@@ -336,6 +338,33 @@
 }
 
 
+- (void)deleteCard:(UIView *)card
+{
+    int index = [self indexForVisibleCard:card];
+    NSLog(@"DELETE %d", index);
+    
+    // tell the data source to remove the item
+    [self.dataSource cardList:self removeCardAtIndex:index];
+    
+    // update card positions
+    CGFloat positionShiftAmount = self.padding + ((NSNumber *)[self.cardHeights objectAtIndex:index]).floatValue;
+    [self.cardPositions removeObjectAtIndex:index];
+    
+    for (int i = index; i < self.cardPositions.count; i++) {
+        CGFloat position = ((NSNumber *)[self.cardPositions objectAtIndex:index]).floatValue;
+        position -= positionShiftAmount;
+        [self.cardPositions insertObject:[NSNumber numberWithFloat:position] atIndex:i];
+    }
+    
+    // update heights
+    [self.cardHeights removeObjectAtIndex:index];
+    
+    // update first visible card index
+    
+    // update last visible card index
+}
+
+
 - (void)returnCardToOriginalState:(UIView *)card
 {
     [UIView animateWithDuration:0.3
@@ -349,9 +378,25 @@
 }
 
 
-- (void)deleteCard:(UIView *)card
+- (void)slideCardOffScreen:(UIView *)card inDirection:(Direction)direction completion:(void (^)(BOOL finished))completion
 {
-    NSLog(@"DELETE");
+    CGFloat finalOffset = 1.5 * self.view.frame.size.width;
+    if (direction == Left) {
+        finalOffset *= -1;
+    }
+    
+    CGFloat finalAngle = [self angleForHorizontalOffset:finalOffset];
+    CGFloat finalAlpha = [self alphaForHorizontalOffset:finalOffset];
+
+    [UIView animateWithDuration:0.3
+                          delay:0
+                        options:UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseIn
+                     animations:^{
+                         card.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(finalAngle),
+                                                                  CGAffineTransformMakeTranslation(finalOffset, 0));
+                         card.alpha = finalAlpha;
+                     }
+                     completion:completion];
 }
 
 //--------------------------------------------------------------------------
@@ -436,6 +481,20 @@
     scrollView.contentSize = CGSizeMake(contentWidth, contentHeight);
     
     return scrollView;
+}
+
+
+- (int)indexForVisibleCard:(UIView *)card
+{
+    int index = self.indexOfFirstVisibleCard;
+        
+    while (index < self.indexOfLastVisibleCard) {
+        NSNumber *key = [NSNumber numberWithInt:index];
+        if ([self.visibleCards objectForKey:key] == card) break;
+        index++;
+    }
+    
+    return index;
 }
 
 @end

@@ -13,6 +13,14 @@
 
 ////////////////////////////////////////////////////////////////////////////
 
+@interface CardListDataSource ()
+
+@property (nonatomic, readwrite) int numberOfCardsForCardList;
+
+@end
+
+////////////////////////////////////////////////////////////////////////////
+
 @implementation CardListDataSource
 
 //--------------------------------------------------------------------------
@@ -32,6 +40,13 @@
     card.layer.rasterizationScale = [UIScreen mainScreen].scale;
     card.layer.shouldRasterize = YES;
     return card;
+}
+
+//--------------------------------------------------------------------------
+
+- (void)cardList:(CardListViewController *)cardList removeCardAtIndex:(int)index
+{
+    NSLog(@"Ok, I'm removing the item at index %d", index);
 }
 
 //--------------------------------------------------------------------------

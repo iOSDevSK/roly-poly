@@ -17,11 +17,10 @@
 @required
 - (int)numberOfCardsForCardList:(CardListViewController *)cardList;
 - (UIView *)cardList:(CardListViewController *)cardList cardForItemAtIndex:(int)index;
+- (void)cardList:(CardListViewController *)cardList removeCardAtIndex:(int)index;
 
 @optional
 - (CGFloat)cardList:(CardListViewController *)cardList heightForCardAtIndex:(int)index;
-- (BOOL)cardList:(CardListViewController *)cardList shouldRemoveCardAtIndex:(int)index;
-- (void)cardList:(CardListViewController *)cardList removeCardAtIndex:(int)index;
 
 @end
 
