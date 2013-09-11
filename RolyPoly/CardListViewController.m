@@ -6,6 +6,7 @@
 //  Copyright (c) 2013 Martin Ortega. All rights reserved.
 //
 
+#import <QuartzCore/QuartzCore.h>
 #import "CardListViewController.h"
 
 typedef enum {
@@ -20,6 +21,8 @@ typedef enum {
 @property (nonatomic, readonly) CGFloat padding;
 @property (nonatomic, readonly) CGFloat cardWidth;
 @property (nonatomic, readonly) CGFloat defaultCardHeight;
+
+@property (nonatomic, readwrite) int numberOfCards;
 @property (nonatomic, strong) NSMutableArray *cardPositions;
 @property (nonatomic, strong) NSMutableArray *cardHeights;
 @property (nonatomic, strong) NSMutableDictionary *visibleCards;
@@ -29,6 +32,8 @@ typedef enum {
 
 @property (nonatomic, readwrite) int indexOfFirstVisibleCard;
 @property (nonatomic, readwrite) int indexOfLastVisibleCard;
+
+@property (nonatomic, readwrite) BOOL isScrollingProgrammatically;
 
 @end
 
@@ -69,7 +74,9 @@ typedef enum {
 #pragma mark - Scroll View Delegate Methods
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
+{    
+    if (self.isScrollingProgrammatically || self.numberOfCards <= 0) return;
+    
     // update index of first visible card
     while ([self shouldDecrementIndexOfFirstVisibleCard]) {
         self.indexOfFirstVisibleCard -= 1;
@@ -115,12 +122,21 @@ typedef enum {
 }
 
 
+- (int)numberOfCards
+{
+    if (!_numberOfCards) {
+        _numberOfCards = [self.dataSource numberOfCardsForCardList:self];
+    }
+    
+    return _numberOfCards;
+}
+
+
 - (NSArray *)cardPositions
 {
     if (!_cardPositions) {
         _cardPositions = [NSMutableArray array];
-        int numberOfCards = [self.dataSource numberOfCardsForCardList:self];
-        for (int i = 0; i < numberOfCards; i++) {
+        for (int i = 0; i < self.numberOfCards; i++) {
             CGFloat position = self.padding;
             
             if (i > 0) {
@@ -142,8 +158,7 @@ typedef enum {
 {
     if (!_cardHeights) {
         _cardHeights = [NSMutableArray array];
-        int numberOfCards = [self.dataSource numberOfCardsForCardList:self];
-        for (int i = 0; i < numberOfCards; i++) {
+        for (int i = 0; i < self.numberOfCards; i++) {
             CGFloat height = self.defaultCardHeight;
             if ([self.dataSource respondsToSelector:@selector(cardList:heightForCardAtIndex:)]) {
                 height = [self.dataSource cardList:self heightForCardAtIndex:i];
@@ -203,16 +218,13 @@ typedef enum {
 
 - (void)loadCardAtIndex:(int)index animated:(BOOL)animated
 {
-    NSLog(@"loading card at index\t\t%d", index);
-
     UIView *card = [self.dataSource cardList:self cardForItemAtIndex:index];
     CGFloat width = self.cardWidth;
     CGFloat height = ((NSNumber *)[self.cardHeights objectAtIndex:index]).floatValue;
     CGFloat x = self.view.center.x - width/2;
     CGFloat y = ((NSNumber *)[self.cardPositions objectAtIndex:index]).floatValue;
     card.frame = CGRectMake(x, y, width, height);
-    
-    NSLog(@"adding recognizer to card %d", index);
+        
     UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanFromRecognizer:)];
     panRecognizer.delegate = self;
     [card addGestureRecognizer:panRecognizer];
@@ -229,8 +241,6 @@ typedef enum {
 
 - (void)unloadCardAtIndex:(int)index
 {
-    NSLog(@"unloading card at index\t%d", index);
-    
     NSNumber *key = [NSNumber numberWithInt:index];
     UIView *card = [self.visibleCards objectForKey:key];
     
@@ -251,7 +261,7 @@ typedef enum {
                                              CGAffineTransformMakeRotation(enterFromLeft ? M_PI/10 : -M_PI/10));
     [UIView animateWithDuration:self.slideDuration
                           delay:self.slideDelay
-                        options:UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseOut
+                        options: UIViewAnimationOptionCurveEaseOut
                      animations:^{
                          card.transform = CGAffineTransformIdentity;
                      }
@@ -307,7 +317,7 @@ typedef enum {
 
 - (CGFloat)angleForHorizontalOffset:(CGFloat)horizontalOffset
 {
-    static CGFloat rotationThreshold = 60;
+    static CGFloat rotationThreshold = 80;
     
     CGFloat direction = horizontalOffset >= 0 ? 1.0 : -1.0;
     horizontalOffset = fabsf(horizontalOffset);
@@ -324,7 +334,7 @@ typedef enum {
 
 - (CGFloat)alphaForHorizontalOffset:(CGFloat)horizontalOffset
 {
-    static CGFloat alphaThreshold = 60;
+    static CGFloat alphaThreshold = 80;
     
     horizontalOffset = fabsf(horizontalOffset);
     
@@ -338,38 +348,11 @@ typedef enum {
 }
 
 
-- (void)deleteCard:(UIView *)card
-{
-    int index = [self indexForVisibleCard:card];
-    NSLog(@"DELETE %d", index);
-    
-    // tell the data source to remove the item
-    [self.dataSource cardList:self removeCardAtIndex:index];
-    
-    // update card positions
-    CGFloat positionShiftAmount = self.padding + ((NSNumber *)[self.cardHeights objectAtIndex:index]).floatValue;
-    [self.cardPositions removeObjectAtIndex:index];
-    
-    for (int i = index; i < self.cardPositions.count; i++) {
-        CGFloat position = ((NSNumber *)[self.cardPositions objectAtIndex:index]).floatValue;
-        position -= positionShiftAmount;
-        [self.cardPositions insertObject:[NSNumber numberWithFloat:position] atIndex:i];
-    }
-    
-    // update heights
-    [self.cardHeights removeObjectAtIndex:index];
-    
-    // update first visible card index
-    
-    // update last visible card index
-}
-
-
 - (void)returnCardToOriginalState:(UIView *)card
 {
     [UIView animateWithDuration:0.3
                           delay:0
-                        options:UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut
+                        options:UIViewAnimationOptionCurveEaseInOut
                      animations:^{
                          card.transform = CGAffineTransformIdentity;
                          card.alpha = 1.0;
@@ -387,10 +370,10 @@ typedef enum {
     
     CGFloat finalAngle = [self angleForHorizontalOffset:finalOffset];
     CGFloat finalAlpha = [self alphaForHorizontalOffset:finalOffset];
-
+    
     [UIView animateWithDuration:0.3
                           delay:0
-                        options:UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseIn
+                        options:UIViewAnimationOptionCurveEaseIn
                      animations:^{
                          card.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(finalAngle),
                                                                   CGAffineTransformMakeTranslation(finalOffset, 0));
@@ -398,6 +381,176 @@ typedef enum {
                      }
                      completion:completion];
 }
+
+
+- (void)deleteCard:(UIView *)card
+{
+    int index = [self indexForVisibleCard:card];
+    
+    NSMutableArray *oldCardPositions = [NSMutableArray arrayWithArray:self.cardPositions];
+    [oldCardPositions removeObjectAtIndex:index];
+    
+    [self removeStateForCardAtIndex:index];
+    CGFloat overlap = [self makeScrollViewShorter];
+    
+    if (self.numberOfCards <= 0) return;
+    
+    [self updateVisibleCardsAfterCardRemovedFromIndex:index];
+    
+    // put visible cards in their old positions
+    for (int visibleCardIndex = self.indexOfFirstVisibleCard; visibleCardIndex <= self.indexOfLastVisibleCard; visibleCardIndex++) {
+        UIView *card = [self.visibleCards objectForKey:[NSNumber numberWithInt:visibleCardIndex]];
+        CGFloat x = card.frame.origin.x;
+        CGFloat y = ((NSNumber *)[oldCardPositions objectAtIndex:visibleCardIndex]).floatValue - overlap;
+        CGFloat width = card.frame.size.width;
+        CGFloat height = card.frame.size.height;
+        card.frame = CGRectMake(x, y, width, height);
+    }
+    
+    [self fillEmptySpaceLeftByCardAtIndex:index];
+}
+
+
+- (void)removeStateForCardAtIndex:(int)index
+{
+    [self.dataSource cardList:self removeCardAtIndex:index];
+    [self unloadCardAtIndex:index];
+    self.numberOfCards--;
+    
+    CGFloat removedCardHeight = ((NSNumber *)[self.cardHeights objectAtIndex:index]).floatValue;
+    [self.cardHeights removeObjectAtIndex:index];
+    
+    [self.cardPositions removeObjectAtIndex:index];
+    for (int i = index; i < [self.cardPositions count]; i++) {
+        CGFloat position = ((NSNumber *)[self.cardPositions objectAtIndex:i]).floatValue;
+        position -= removedCardHeight + self.padding;
+        [self.cardPositions replaceObjectAtIndex:i withObject:[NSNumber numberWithFloat:position]];
+    }
+    
+    self.indexOfLastVisibleCard--;
+    
+    NSArray *keysInOrder =  [self.visibleCards.allKeys sortedArrayUsingComparator:^NSComparisonResult(NSNumber *a, NSNumber *b) {
+        return [a compare:b];
+    }];
+    
+    for (NSNumber *key in keysInOrder) {
+        int cardIndex = key.intValue;
+        if (cardIndex > index) {
+            UIView *card = [self.visibleCards objectForKey:key];
+            [self.visibleCards removeObjectForKey:key];
+            cardIndex--;
+            NSNumber *newKey = [NSNumber numberWithInt:cardIndex];
+            [self.visibleCards setObject:card forKey:newKey];
+        }
+    }
+}
+
+
+- (void)updateVisibleCardsAfterCardRemovedFromIndex:(int)index
+{
+    while ([self shouldIncrementIndexOfFirstVisibleCard]) {
+        [self unloadCardAtIndex:self.indexOfFirstVisibleCard];
+        self.indexOfFirstVisibleCard += 1;
+    }
+    
+    while ([self shouldDecrementIndexOfFirstVisibleCard]) {
+        self.indexOfFirstVisibleCard -= 1;
+        [self loadCardAtIndex:self.indexOfFirstVisibleCard animated:NO];
+    }
+    
+    while ([self shouldIncrementIndexOfLastVisibleCard]) {
+        self.indexOfLastVisibleCard += 1;
+        [self loadCardAtIndex:self.indexOfLastVisibleCard animated:NO];
+    }
+    
+    while ([self shouldDecrementIndexOfLastVisibleCard]) {
+        [self unloadCardAtIndex:self.indexOfLastVisibleCard];
+        self.indexOfLastVisibleCard -= 1;
+    }
+}
+
+
+- (CGFloat)makeScrollViewShorter
+{
+    UIScrollView *scrollView = (UIScrollView *)self.view;
+    
+    CGFloat bottomOfScrollView = scrollView.contentSize.height;
+    CGFloat bottomOfScreen = scrollView.contentOffset.y + scrollView.frame.size.height;
+    CGFloat bottomOfScreenToBottomOfScrollView = MAX(0, bottomOfScrollView - bottomOfScreen);
+    
+    CGFloat heightOfAllCards = 0;
+    for (NSNumber *cardHeight in self.cardHeights) {
+        heightOfAllCards += cardHeight.floatValue;
+    }
+    
+    CGFloat spaceLeftByRemovedCard = scrollView.contentSize.height - heightOfAllCards - (self.numberOfCards + 1)*self.padding;
+    CGFloat amountScrollViewHeightWillChange = MIN(scrollView.contentSize.height - scrollView.frame.size.height, spaceLeftByRemovedCard);
+    CGFloat overlap = MAX(0, bottomOfScreen - (bottomOfScrollView - amountScrollViewHeightWillChange));
+    
+    // make scrollView shorter
+    BOOL removedRegionOverlapsVisibleRegion = bottomOfScreenToBottomOfScrollView < amountScrollViewHeightWillChange;
+    
+    if (removedRegionOverlapsVisibleRegion) {
+        self.isScrollingProgrammatically = YES;
+        scrollView.contentOffset = CGPointMake(scrollView.contentOffset.x, scrollView.contentOffset.y - overlap);
+        self.isScrollingProgrammatically = NO;
+    }
+    
+    scrollView.contentSize = CGSizeMake(scrollView.contentSize.width, scrollView.contentSize.height - amountScrollViewHeightWillChange);
+
+    return overlap;
+}
+
+
+- (void)fillEmptySpaceLeftByCardAtIndex:(int)index
+{
+    NSArray *sortedKeys =  [self.visibleCards.allKeys sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
+        NSNumber *distanceFromAToRemovedCard = [NSNumber numberWithInt:abs(((NSNumber *)a).intValue - index)];
+        NSNumber *distanceFromBToRemovedCard = [NSNumber numberWithInt:abs(((NSNumber *)b).intValue - index)];
+        return [distanceFromAToRemovedCard compare:distanceFromBToRemovedCard];
+    }];
+    
+    CGFloat delay = 0.0;
+    for (NSNumber *key in sortedKeys) {
+        UIView *card = [self.visibleCards objectForKey:key];
+        CGFloat oldPosition = card.frame.origin.y;
+        CGFloat newPosition = ((NSNumber *)[self.cardPositions objectAtIndex:key.intValue]).floatValue;
+        BOOL needsToBeMoved = oldPosition != newPosition;
+        if (needsToBeMoved) {
+            card.frame = CGRectMake(card.frame.origin.x, newPosition, card.frame.size.width, card.frame.size.height);
+            card.transform = CGAffineTransformMakeTranslation(0, oldPosition - newPosition);
+            CGFloat duration = 0.4;
+            
+            // slide
+            [UIView animateWithDuration:duration
+                                  delay:delay
+                                options:UIViewAnimationOptionCurveEaseInOut
+                             animations:^{
+                                 card.transform = CGAffineTransformIdentity;
+                             }
+                             completion:nil];
+            
+            // rotation
+            CGFloat angle = newPosition < oldPosition ? 2*(M_PI/180) : -2*(M_PI/180);
+            CAKeyframeAnimation *rotationAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform.rotation.z"];
+            rotationAnimation.duration = duration;
+            rotationAnimation.beginTime = CACurrentMediaTime() + delay + 0.01;
+            rotationAnimation.calculationMode = kCAAnimationCubic;
+            rotationAnimation.values = @[[NSNumber numberWithFloat:0.0],
+                                         [NSNumber numberWithFloat:angle],
+                                         [NSNumber numberWithFloat:angle],
+                                         [NSNumber numberWithFloat:0.0]];
+            rotationAnimation.keyTimes = @[[NSNumber numberWithFloat:0.0],
+                                           [NSNumber numberWithFloat:0.35],
+                                           [NSNumber numberWithFloat:0.65],
+                                           [NSNumber numberWithFloat:1.0]];
+            [card.layer addAnimation:rotationAnimation forKey:nil];
+            
+            delay += 0.2;
+        }
+    }
+}
+
 
 //--------------------------------------------------------------------------
 
@@ -416,15 +569,14 @@ typedef enum {
 
 
 - (BOOL)shouldIncrementIndexOfFirstVisibleCard
-{
+{    
     UIScrollView *scrollView = (UIScrollView *)self.view;
-    int numberOfCards = [self.dataSource numberOfCardsForCardList:self];
     
     NSNumber *positionOfFirstVisibleCard = [self.cardPositions objectAtIndex:self.indexOfFirstVisibleCard];
     NSNumber *heightOfFirstVisibleCard = [self.cardHeights objectAtIndex:self.indexOfFirstVisibleCard];
     
     BOOL cardIsNotVisible = positionOfFirstVisibleCard.floatValue + heightOfFirstVisibleCard.floatValue <= scrollView.contentOffset.y;
-    BOOL isLastCardInList = self.indexOfFirstVisibleCard == numberOfCards - 1;
+    BOOL isLastCardInList = self.indexOfFirstVisibleCard == self.numberOfCards - 1;
     
     return cardIsNotVisible && !isLastCardInList;
 }
@@ -447,7 +599,6 @@ typedef enum {
 - (BOOL)shouldIncrementIndexOfLastVisibleCard
 {
     UIScrollView *scrollView = (UIScrollView *)self.view;
-    int numberOfCards = [self.dataSource numberOfCardsForCardList:self];
     
     NSNumber *positionOfLastVisibleCard = [self.cardPositions objectAtIndex:self.indexOfLastVisibleCard];
     NSNumber *heightOfLastVisibleCard = [self.cardHeights objectAtIndex:self.indexOfLastVisibleCard];
@@ -456,7 +607,7 @@ typedef enum {
     CGFloat positionOfCardBottom = positionOfLastVisibleCard.floatValue + heightOfLastVisibleCard.floatValue;
     
     BOOL cardBelowIsVisble = positionOfScreenBottom - positionOfCardBottom > self.padding;
-    BOOL isLastCardInList = self.indexOfLastVisibleCard == numberOfCards - 1;
+    BOOL isLastCardInList = self.indexOfLastVisibleCard == self.numberOfCards - 1;
     
     return cardBelowIsVisble && !isLastCardInList;
 }
@@ -470,6 +621,7 @@ typedef enum {
     CGRect fullScreenRect = [[UIScreen mainScreen] applicationFrame];
     UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:fullScreenRect];
     scrollView.backgroundColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
+    scrollView.alwaysBounceVertical = YES;
     
     CGFloat contentWidth = [[UIScreen mainScreen] applicationFrame].size.width;
     CGFloat contentHeight = self.padding;
@@ -495,6 +647,12 @@ typedef enum {
     }
     
     return index;
+}
+
+
+- (CGRect)frameForCardAtIndex:(int)index
+{
+    return CGRectMake(0, 0, 0, 0);
 }
 
 @end

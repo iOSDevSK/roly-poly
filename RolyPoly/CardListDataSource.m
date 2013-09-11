@@ -10,12 +10,13 @@
 #import "CardListDataSource.h"
 
 #define ARC4RANDOM_MAX      0x100000000
+#define NUM_CARDS           10
 
 ////////////////////////////////////////////////////////////////////////////
 
 @interface CardListDataSource ()
 
-@property (nonatomic, readwrite) int numberOfCardsForCardList;
+@property (nonatomic, strong) NSMutableArray *cards;
 
 @end
 
@@ -23,22 +24,33 @@
 
 @implementation CardListDataSource
 
+
+//--------------------------------------------------------------------------
+
+- (NSMutableArray *)cards
+{
+    if (!_cards) {
+        _cards = [NSMutableArray array];
+        for (int i = 0; i < NUM_CARDS; i++) {
+            [_cards addObject:[self randomCard]];
+        }
+    }
+    
+    return _cards;
+}
+
 //--------------------------------------------------------------------------
 
 - (int)numberOfCardsForCardList:(CardListViewController *)cardList
 {
-    return 10;
+    return self.cards.count;
 }
 
 //--------------------------------------------------------------------------
 
 - (UIView *)cardList:(CardListViewController *)cardList cardForItemAtIndex:(int)index
 {
-    UIView *card = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
-    card.backgroundColor = [self randomColor];
-    card.layer.cornerRadius = 3;
-    card.layer.rasterizationScale = [UIScreen mainScreen].scale;
-    card.layer.shouldRasterize = YES;
+    UIView *card = [self.cards objectAtIndex:index];
     return card;
 }
 
@@ -46,7 +58,19 @@
 
 - (void)cardList:(CardListViewController *)cardList removeCardAtIndex:(int)index
 {
-    NSLog(@"Ok, I'm removing the item at index %d", index);
+    [self.cards removeObjectAtIndex:index];
+}
+
+//--------------------------------------------------------------------------
+
+- (UIView *)randomCard
+{
+    UIView *card = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
+    card.backgroundColor = [self randomColor];
+    card.layer.cornerRadius = 3;
+    card.layer.rasterizationScale = [UIScreen mainScreen].scale;
+    card.layer.shouldRasterize = YES;
+    return card;
 }
 
 //--------------------------------------------------------------------------
