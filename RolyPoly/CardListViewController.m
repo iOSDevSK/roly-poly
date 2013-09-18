@@ -32,6 +32,7 @@ typedef enum {
 
 @property (nonatomic, readwrite) int indexOfFirstVisibleCard;
 @property (nonatomic, readwrite) int indexOfLastVisibleCard;
+@property (nonatomic, readwrite) int indexOfFurthestVisitedCard;
 
 @property (nonatomic, readwrite) BOOL isScrollingProgrammatically;
 
@@ -91,7 +92,8 @@ typedef enum {
     // update index of last visible card
     while ([self shouldIncrementIndexOfLastVisibleCard]) {
         self.indexOfLastVisibleCard += 1;
-        [self loadCardAtIndex:self.indexOfLastVisibleCard animated:YES];
+        BOOL animated = self.indexOfLastVisibleCard > self.indexOfFurthestVisitedCard;
+        [self loadCardAtIndex:self.indexOfLastVisibleCard animated:animated];
     }
     
     while ([self shouldDecrementIndexOfLastVisibleCard]) {
@@ -236,6 +238,10 @@ typedef enum {
     if (animated) {
         [self slideCardIntoPlace:card];
     }
+    
+    if (index > self.indexOfFurthestVisitedCard) {
+        self.indexOfFurthestVisitedCard = index;
+    }
 }
 
 
@@ -259,6 +265,7 @@ typedef enum {
     
     card.transform = CGAffineTransformConcat(CGAffineTransformMakeTranslation(0, yOffset),
                                              CGAffineTransformMakeRotation(enterFromLeft ? M_PI/10 : -M_PI/10));
+    
     [UIView animateWithDuration:self.slideDuration
                           delay:self.slideDelay
                         options: UIViewAnimationOptionCurveEaseOut
@@ -282,6 +289,8 @@ typedef enum {
     
     BOOL slopeLessThanOneThird = fabs(y/x) < 1.0/3.0;
     BOOL slopeUndefined = x == 0 && y == 0;
+    
+    NSLog(@"%f/%f", y, x);
             
     return slopeLessThanOneThird || slopeUndefined;
 }
@@ -317,7 +326,7 @@ typedef enum {
 
 - (CGFloat)angleForHorizontalOffset:(CGFloat)horizontalOffset
 {
-    static CGFloat rotationThreshold = 80;
+    static CGFloat rotationThreshold = 70;
     
     CGFloat direction = horizontalOffset >= 0 ? 1.0 : -1.0;
     horizontalOffset = fabsf(horizontalOffset);
@@ -334,7 +343,7 @@ typedef enum {
 
 - (CGFloat)alphaForHorizontalOffset:(CGFloat)horizontalOffset
 {
-    static CGFloat alphaThreshold = 80;
+    static CGFloat alphaThreshold = 70;
     
     horizontalOffset = fabsf(horizontalOffset);
     
@@ -519,7 +528,7 @@ typedef enum {
         if (needsToBeMoved) {
             card.frame = CGRectMake(card.frame.origin.x, newPosition, card.frame.size.width, card.frame.size.height);
             card.transform = CGAffineTransformMakeTranslation(0, oldPosition - newPosition);
-            CGFloat duration = 0.4;
+            CGFloat duration = 0.5;
             
             // slide
             [UIView animateWithDuration:duration
@@ -531,7 +540,7 @@ typedef enum {
                              completion:nil];
             
             // rotation
-            CGFloat angle = newPosition < oldPosition ? 2*(M_PI/180) : -2*(M_PI/180);
+            CGFloat angle = newPosition < oldPosition ? 1*(M_PI/180) : -1*(M_PI/180);
             CAKeyframeAnimation *rotationAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform.rotation.z"];
             rotationAnimation.duration = duration;
             rotationAnimation.beginTime = CACurrentMediaTime() + delay + 0.01;
@@ -620,7 +629,8 @@ typedef enum {
 {
     CGRect fullScreenRect = [[UIScreen mainScreen] applicationFrame];
     UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:fullScreenRect];
-    scrollView.backgroundColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
+    scrollView.backgroundColor = [UIColor colorWithRed:0.898 green:0.898 blue:0.898 alpha:1.0];
+
     scrollView.alwaysBounceVertical = YES;
     
     CGFloat contentWidth = [[UIScreen mainScreen] applicationFrame].size.width;

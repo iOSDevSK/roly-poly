@@ -8,14 +8,57 @@
 
 #import <QuartzCore/QuartzCore.h>
 #import "CardListDataSource.h"
+#import "BookmarkCardFactory.h"
 
-#define ARC4RANDOM_MAX      0x100000000
-#define NUM_CARDS           10
+////////////////////////////////////////////////////////////////////////////
+
+@interface Bookmark : NSObject
+
+@property (nonatomic, strong) NSString *productName;
+@property (nonatomic, strong) NSString *productImagePath;
+@property (nonatomic, strong) NSString *basdf;
+@property (nonatomic, strong) NSString *shopName;
+@property (nonatomic) int price;
+@property (nonatomic) float rating;
+@property (nonatomic) int numberOfRatings;
+
+- (id)initWithProductName:(NSString *)productName
+         productImagePath:(NSString *)productImagePath
+                 shopName:(NSString *)shopName
+                    price:(int)price
+                   rating:(float)rating
+          numberOfRatings:(int)numberOfRatings;
+
+@end
+
+@implementation Bookmark
+
+- (id)initWithProductName:(NSString *)productName
+         productImagePath:(NSString *)productImagePath
+                 shopName:(NSString *)shopName
+                    price:(int)price
+                   rating:(float)rating
+          numberOfRatings:(int)numberOfRatings
+{
+    self = [super init];
+    if (self) {
+        self.productName = productName;
+        self.productImagePath = productImagePath;
+        self.shopName = shopName;
+        self.price = price;
+        self.rating = rating;
+        self.numberOfRatings = numberOfRatings;
+    }
+    return self;
+}
+
+@end
 
 ////////////////////////////////////////////////////////////////////////////
 
 @interface CardListDataSource ()
 
+@property (nonatomic, strong) NSMutableArray *bookmarks;
 @property (nonatomic, strong) NSMutableArray *cards;
 
 @end
@@ -27,12 +70,104 @@
 
 //--------------------------------------------------------------------------
 
+- (NSMutableArray *)bookmarks
+{
+    if (!_bookmarks) {
+        Bookmark *canonRebel = [[Bookmark alloc] initWithProductName:@"Canon EOS Rebel T4i"
+                                                    productImagePath:@"canon-rebel.png"
+                                                            shopName:@"New Egg"
+                                                               price:80614
+                                                              rating:4.5
+                                                     numberOfRatings:756];
+        
+        Bookmark *marketPlace = [[Bookmark alloc] initWithProductName:@"Marketplace 3.0"
+                                                     productImagePath:@"marketplace.png"
+                                                             shopName:@"Rakuten Books"
+                                                                price:1802
+                                                               rating:5
+                                                      numberOfRatings:1];
+        
+        Bookmark *basketball = [[Bookmark alloc] initWithProductName:@"NBA Game Ball"
+                                                    productImagePath:@"basketball.png"
+                                                            shopName:@"Jump USA"
+                                                               price:9913
+                                                              rating:5
+                                                     numberOfRatings:84];
+        
+        Bookmark *iphone = [[Bookmark alloc] initWithProductName:@"iPhone 5C"
+                                                productImagePath:@"iphone-5c.png"
+                                                        shopName:@"Apple Inc."
+                                                           price:53457
+                                                          rating:4.5
+                                                 numberOfRatings:405];
+        
+        Bookmark *espresso = [[Bookmark alloc] initWithProductName:@"Phillips Saeco"
+                                                  productImagePath:@"phillips-saeco.png"
+                                                          shopName:@"Sears"
+                                                             price:63453
+                                                            rating:4
+                                                   numberOfRatings:245];
+        
+        Bookmark *glove = [[Bookmark alloc] initWithProductName:@"Mizuno Pro Limited Edition"
+                                               productImagePath:@"baseball-glove.png"
+                                                       shopName:@"Mizuno USA"
+                                                          price:49565
+                                                         rating:5
+                                                numberOfRatings:422];
+        
+        Bookmark *baloons = [[Bookmark alloc] initWithProductName:@"Party Balloons"
+                                               productImagePath:@"balloons.png"
+                                                       shopName:@"Party City"
+                                                          price:1231
+                                                         rating:3
+                                                numberOfRatings:27];
+        
+        Bookmark *batman = [[Bookmark alloc] initWithProductName:@"Batman Utitility Belt"
+                                                productImagePath:@"batman-utility-belt.png"
+                                                        shopName:@"Wayne Enterprises"
+                                                           price:299921
+                                                          rating:5
+                                                 numberOfRatings:124];
+        
+        Bookmark *chia = [[Bookmark alloc] initWithProductName:@"Mr. T Chia Pet"
+                                              productImagePath:@"chia-pet.png"
+                                                      shopName:@"Walmart"
+                                                         price:500
+                                                        rating:2
+                                               numberOfRatings:833];
+        
+        Bookmark *competitiveness = [[Bookmark alloc] initWithProductName:@"Competitiveness"
+                                                         productImagePath:@"competitiveness.png"
+                                                                 shopName:@"Rakuten Books"
+                                                                    price:5231
+                                                                   rating:4.5
+                                                          numberOfRatings:15];
+        
+        _bookmarks = [NSMutableArray arrayWithArray:@[ canonRebel, marketPlace, basketball, iphone, espresso, glove, baloons, batman, competitiveness, chia ]];
+    }
+    
+    return _bookmarks;
+}
+
+//--------------------------------------------------------------------------
+
 - (NSMutableArray *)cards
 {
     if (!_cards) {
         _cards = [NSMutableArray array];
-        for (int i = 0; i < NUM_CARDS; i++) {
-            [_cards addObject:[self randomCard]];
+        for (Bookmark *bookmark in self.bookmarks) {
+            UIView *card = [BookmarkCardFactory bookmarkCardWithProductName:bookmark.productName
+                                                           productImagePath:bookmark.productImagePath
+                                                                   shopName:bookmark.shopName
+                                                                      price:bookmark.price
+                                                                     rating:bookmark.rating
+                                                            numberOfRatings:bookmark.numberOfRatings];
+            card.layer.cornerRadius = 3;
+            card.layer.borderColor = [[UIColor alloc] initWithRed:0.85 green:0.85 blue:0.85 alpha:1.0].CGColor;
+            card.layer.borderWidth = 1;
+            card.layer.rasterizationScale = [UIScreen mainScreen].scale;
+            card.layer.shouldRasterize = YES;
+            [_cards addObject:card];
         }
     }
     
@@ -50,8 +185,7 @@
 
 - (UIView *)cardList:(CardListViewController *)cardList cardForItemAtIndex:(int)index
 {
-    UIView *card = [self.cards objectAtIndex:index];
-    return card;
+    return [self.cards objectAtIndex:index];
 }
 
 //--------------------------------------------------------------------------
@@ -59,37 +193,6 @@
 - (void)cardList:(CardListViewController *)cardList removeCardAtIndex:(int)index
 {
     [self.cards removeObjectAtIndex:index];
-}
-
-//--------------------------------------------------------------------------
-
-- (UIView *)randomCard
-{
-    UIView *card = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
-    card.backgroundColor = [self randomColor];
-    card.layer.cornerRadius = 3;
-    card.layer.rasterizationScale = [UIScreen mainScreen].scale;
-    card.layer.shouldRasterize = YES;
-    return card;
-}
-
-//--------------------------------------------------------------------------
-
-- (UIColor *)randomColor
-{
-    static CGFloat mixRed   = 0;
-    static CGFloat mixGreen = 0.7843;
-    static CGFloat mixBlue  = 1.0;
-    
-    CGFloat randomRed   = 0.471 * (2*((double)arc4random() / ARC4RANDOM_MAX) - 1);
-    CGFloat randomGreen = 0.471 * (2*((double)arc4random() / ARC4RANDOM_MAX) - 1);
-    CGFloat randomBlue  = 0.471 * (2*((double)arc4random() / ARC4RANDOM_MAX) - 1);
-    
-    UIColor *randomColor = [[UIColor alloc] initWithRed:(randomRed + mixRed)/2.0
-                                                  green:(randomGreen + mixGreen)/2.0
-                                                   blue:(randomBlue + mixBlue)/2.0 alpha:1.0];
-    
-    return randomColor;
 }
 
 @end
