@@ -7,14 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "Bookmark.h"
 
 @interface BookmarkCardFactory : NSObject
 
-+ (UIView *)bookmarkCardWithProductName:(NSString *)productName
-                       productImagePath:(NSString *)productImagePath
-                               shopName:(NSString *)shopName
-                                  price:(int)price
-                                 rating:(float)rating
-                        numberOfRatings:(int)numberOfRatings;
++ (UIView *)createBookmarkCardFromBookmark:(Bookmark *)bookmark;
 
 @end

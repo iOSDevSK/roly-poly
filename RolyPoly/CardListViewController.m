@@ -289,9 +289,7 @@ typedef enum {
     
     BOOL slopeLessThanOneThird = fabs(y/x) < 1.0/3.0;
     BOOL slopeUndefined = x == 0 && y == 0;
-    
-    NSLog(@"%f/%f", y, x);
-            
+                
     return slopeLessThanOneThird || slopeUndefined;
 }
 

@@ -8,11 +8,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "RolyPoly/CardListViewController.m"
-         timestampString = "400819594.968939"
+         timestampString = "401161702.782566"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "525"
-         endingLineNumber = "525"
+         startingLineNumber = "523"
+         endingLineNumber = "523"
          landmarkName = "-fillEmptySpaceLeftByCardAtIndex:"
          landmarkType = "5">
       </FileBreakpoint>

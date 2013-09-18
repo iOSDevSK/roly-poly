@@ -56,6 +56,7 @@
 		8CB0B1DE17E3FB1A00000D50 /* add-to-cart-blue.png in Resources */ = {isa = PBXBuildFile; fileRef = 8CB0B1DC17E3FB1A00000D50 /* add-to-cart-blue.png */; };
 		8CB0B1DF17E3FB1A00000D50 /* add-to-cart-white.png in Resources */ = {isa = PBXBuildFile; fileRef = 8CB0B1DD17E3FB1A00000D50 /* add-to-cart-white.png */; };
 		8CB0B1E117E4015900000D50 /* blue-background.png in Resources */ = {isa = PBXBuildFile; fileRef = 8CB0B1E017E4015900000D50 /* blue-background.png */; };
+		8CFD49B217EA612B00EDDE17 /* Bookmark.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CFD49B117EA612B00EDDE17 /* Bookmark.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -115,6 +116,8 @@
 		8CB0B1DC17E3FB1A00000D50 /* add-to-cart-blue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "add-to-cart-blue.png"; sourceTree = "<group>"; };
 		8CB0B1DD17E3FB1A00000D50 /* add-to-cart-white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "add-to-cart-white.png"; sourceTree = "<group>"; };
 		8CB0B1E017E4015900000D50 /* blue-background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "blue-background.png"; sourceTree = "<group>"; };
+		8CFD49B017EA612B00EDDE17 /* Bookmark.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bookmark.h; sourceTree = "<group>"; };
+		8CFD49B117EA612B00EDDE17 /* Bookmark.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Bookmark.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -173,7 +176,10 @@
 				5B2CF16817D3FE0100A095F3 /* CardListViewController.m */,
 				5B2CF16A17D54F4200A095F3 /* CardListDataSource.h */,
 				5B2CF16B17D54F4200A095F3 /* CardListDataSource.m */,
+				8CFD49B017EA612B00EDDE17 /* Bookmark.h */,
+				8CFD49B117EA612B00EDDE17 /* Bookmark.m */,
 				8C1C075017E7BE7E00C8CB17 /* Bookmark Card View */,
+				8C56D06417E7C32200092110 /* Products */,
 				5BEED17317D15A930044BC83 /* Supporting Files */,
 			);
 			path = RolyPoly;
@@ -197,7 +203,6 @@
 			isa = PBXGroup;
 			children = (
 				8C56D06317E7C31000092110 /* Stars */,
-				8C56D06417E7C32200092110 /* Products */,
 				8C56D06517E7C34400092110 /* Add To Cart */,
 				8C9EC00F17E2B4E40026A193 /* BookmarkCardView.xib */,
 				8C56D08E17E8FBDD00092110 /* BookmarkCardFactory.h */,
@@ -364,6 +369,7 @@
 				5B2CF16917D3FE0100A095F3 /* CardListViewController.m in Sources */,
 				5B2CF16C17D54F4200A095F3 /* CardListDataSource.m in Sources */,
 				8C56D09017E8FBDD00092110 /* BookmarkCardFactory.m in Sources */,
+				8CFD49B217EA612B00EDDE17 /* Bookmark.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -453,8 +459,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "RolyPoly/RolyPoly-Prefix.pch";
 				INFOPLIST_FILE = "RolyPoly/RolyPoly-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				"OTHER_LDFLAGS[arch=*]" = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -469,8 +477,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "RolyPoly/RolyPoly-Prefix.pch";
 				INFOPLIST_FILE = "RolyPoly/RolyPoly-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				"OTHER_LDFLAGS[arch=*]" = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

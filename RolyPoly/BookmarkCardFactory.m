@@ -6,6 +6,7 @@
 //  Copyright (c) 2013 Martin Ortega. All rights reserved.
 //
 
+#import <QuartzCore/QuartzCore.h>
 #import "BookmarkCardFactory.h"
 
 ////////////////////////////////////////////////////////////////////////////
@@ -28,24 +29,34 @@
 
 @implementation BookmarkCardFactory
 
-+ (UIView *)bookmarkCardWithProductName:(NSString *)productName
-                       productImagePath:(NSString *)productImagePath
-                               shopName:(NSString *)shopName
-                                  price:(int)price
-                                 rating:(float)rating
-                        numberOfRatings:(int)numberOfRatings
++ (UIView *)createBookmarkCardFromBookmark:(Bookmark *)bookmark
 {
     BookmarkCardProxy *proxy = [[BookmarkCardProxy alloc] init];
     UIView *bookmarkCard = [[[NSBundle mainBundle] loadNibNamed:@"BookmarkCardView" owner:proxy options:nil] objectAtIndex:0];
     
-    proxy.productName.text = productName;
-    proxy.productImage.image = [UIImage imageNamed:productImagePath];
-    proxy.shopName.text = shopName;
-    proxy.price.text = [NSString stringWithFormat:@"¥ %d", price];
-    proxy.rating.image = [UIImage imageNamed:[BookmarkCardFactory starImagePathForRating:rating]];
-    proxy.numberOfRatings.text = [NSString stringWithFormat:@"(%d)", numberOfRatings];
-
+    proxy.productName.text = bookmark.productName;
+    proxy.productImage.image = [UIImage imageNamed:bookmark.productImagePath];
+    proxy.shopName.text = bookmark.shopName;
+    proxy.price.text = [BookmarkCardFactory currencyStringForPrice:bookmark.price];
+    proxy.rating.image = [UIImage imageNamed:[BookmarkCardFactory starImagePathForRating:bookmark.rating]];
+    proxy.numberOfRatings.text = [NSString stringWithFormat:@"(%d)", bookmark.numberOfRatings];
+    
+    bookmarkCard.layer.cornerRadius = 3;
+    bookmarkCard.layer.borderColor = [[UIColor alloc] initWithRed:0.85 green:0.85 blue:0.85 alpha:1.0].CGColor;
+    bookmarkCard.layer.borderWidth = 1;
+    bookmarkCard.layer.rasterizationScale = [UIScreen mainScreen].scale;
+    bookmarkCard.layer.shouldRasterize = YES;
+    
     return bookmarkCard;
+}
+
+
++ (NSString *)currencyStringForPrice:(int)price
+{
+    NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+    [numberFormatter setNumberStyle:NSNumberFormatterCurrencyStyle];
+    NSString *numberAsString = [numberFormatter stringFromNumber:[NSNumber numberWithInt:price]];
+    return numberAsString;
 }
 
 

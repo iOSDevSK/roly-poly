@@ -6,53 +6,9 @@
 //  Copyright (c) 2013 Martin Ortega. All rights reserved.
 //
 
-#import <QuartzCore/QuartzCore.h>
 #import "CardListDataSource.h"
 #import "BookmarkCardFactory.h"
-
-////////////////////////////////////////////////////////////////////////////
-
-@interface Bookmark : NSObject
-
-@property (nonatomic, strong) NSString *productName;
-@property (nonatomic, strong) NSString *productImagePath;
-@property (nonatomic, strong) NSString *basdf;
-@property (nonatomic, strong) NSString *shopName;
-@property (nonatomic) int price;
-@property (nonatomic) float rating;
-@property (nonatomic) int numberOfRatings;
-
-- (id)initWithProductName:(NSString *)productName
-         productImagePath:(NSString *)productImagePath
-                 shopName:(NSString *)shopName
-                    price:(int)price
-                   rating:(float)rating
-          numberOfRatings:(int)numberOfRatings;
-
-@end
-
-@implementation Bookmark
-
-- (id)initWithProductName:(NSString *)productName
-         productImagePath:(NSString *)productImagePath
-                 shopName:(NSString *)shopName
-                    price:(int)price
-                   rating:(float)rating
-          numberOfRatings:(int)numberOfRatings
-{
-    self = [super init];
-    if (self) {
-        self.productName = productName;
-        self.productImagePath = productImagePath;
-        self.shopName = shopName;
-        self.price = price;
-        self.rating = rating;
-        self.numberOfRatings = numberOfRatings;
-    }
-    return self;
-}
-
-@end
+#import "Bookmark.h"
 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -125,7 +81,7 @@
         Bookmark *batman = [[Bookmark alloc] initWithProductName:@"Batman Utitility Belt"
                                                 productImagePath:@"batman-utility-belt.png"
                                                         shopName:@"Wayne Enterprises"
-                                                           price:299921
+                                                           price:29991
                                                           rating:5
                                                  numberOfRatings:124];
         
@@ -156,17 +112,7 @@
     if (!_cards) {
         _cards = [NSMutableArray array];
         for (Bookmark *bookmark in self.bookmarks) {
-            UIView *card = [BookmarkCardFactory bookmarkCardWithProductName:bookmark.productName
-                                                           productImagePath:bookmark.productImagePath
-                                                                   shopName:bookmark.shopName
-                                                                      price:bookmark.price
-                                                                     rating:bookmark.rating
-                                                            numberOfRatings:bookmark.numberOfRatings];
-            card.layer.cornerRadius = 3;
-            card.layer.borderColor = [[UIColor alloc] initWithRed:0.85 green:0.85 blue:0.85 alpha:1.0].CGColor;
-            card.layer.borderWidth = 1;
-            card.layer.rasterizationScale = [UIScreen mainScreen].scale;
-            card.layer.shouldRasterize = YES;
+            UIView *card = [BookmarkCardFactory createBookmarkCardFromBookmark:bookmark];
             [_cards addObject:card];
         }
     }
